@@ -1,5 +1,5 @@
 import { unimplemented } from "./deps.ts";
-import { fromJulian, toDays } from "./julian_date.ts";
+import { fromJulian, hoursLater, toDays } from "./julian_date.ts";
 import { moonCoordinates } from "./moon.ts";
 import {
   altitude,
@@ -189,10 +189,82 @@ export function getMoonIlluminations(date?: Date) {
 
 /** Moon rise and set times */
 export function getMoonTimes(
-  _date: Date,
-  _latitude: number,
-  _longitude: number,
+  date: Date,
+  latitude: number,
+  longitude: number,
 ) {
-  // TODO: potentially address function signature here.
-  unimplemented();
+  const t = new Date(date);
+  t.setHours(0, 0, 0, 0);
+
+  const hc = 0.133 * DEGREES_TO_RADIANS;
+  let h0 = getMoonPosition(t, latitude, longitude).altitude - hc;
+  let x1 = NaN, x2 = NaN;
+  let rise = NaN, set = NaN;
+  let ye = NaN;
+
+  // go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
+  for (let i = 1; i <= 24; i += 2) {
+    const h1 = getMoonPosition(hoursLater(t, i), latitude, longitude).altitude -
+      hc;
+    const h2 =
+      getMoonPosition(hoursLater(t, i + 1), latitude, longitude).altitude - hc;
+
+    const a = (h0 + h2) / 2 - h1;
+    const b = (h2 - h0) / 2;
+    const xe = -b / (2 * a);
+    ye = (a * xe + b) * xe + h1;
+    const d = b * b - 4 * a * h1;
+    let roots = 0;
+
+    if (d >= 0) {
+      const dx = Math.sqrt(d) / (Math.abs(a) * 2);
+      x1 = xe - dx;
+      x2 = xe + dx;
+      if (Math.abs(x1) <= 1) {
+        roots++;
+      }
+      if (Math.abs(x2) <= 1) {
+        roots++;
+      }
+      if (x1 < -1) {
+        x1 = x2;
+      }
+    }
+
+    if (roots === 1) {
+      if (h0 < 0) {
+        rise = i + x1;
+      } else {
+        set = i + x1;
+      }
+    } else if (roots === 2) {
+      rise = i + (ye < 0 ? x2 : x1);
+      set = i + (ye < 0 ? x1 : x2);
+    }
+
+    if (rise && set) {
+      break;
+    }
+
+    h0 = h2;
+  }
+
+  const result: {
+    rise?: Date;
+    set?: Date;
+    alwaysUp?: true;
+    alwaysDown?: true;
+  } = {};
+
+  if (rise) {
+    result.rise = hoursLater(t, rise);
+  }
+  if (set) {
+    result.set = hoursLater(t, set);
+  }
+  if (!rise && !set) {
+    result[ye > 0 ? "alwaysUp" : "alwaysDown"] = true;
+  }
+
+  return result;
 }
