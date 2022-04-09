@@ -1,9 +1,12 @@
+import { unimplemented } from "./deps.ts";
 import { toDays } from "./julian_date.ts";
-import { altitude, azimuth, sideRealTime } from "./position.ts";
+import {
+  altitude,
+  azimuth,
+  DEGREES_TO_RADIANS,
+  sideRealTime,
+} from "./position.ts";
 import { sunCoordinates } from "./sun.ts";
-
-/** One degree to radians */
-const DEGREES_TO_RADIANS = Math.PI / 180;
 
 /** Sun configuration times */
 export const SUN_TIMES = [
@@ -28,4 +31,18 @@ export function getPosition(date: Date, latitude: number, longitude: number) {
     azimuth: azimuth(H, phi, declination),
     altitude: altitude(H, phi, declination),
   };
+}
+
+/**
+ * Calculates sun times for a given date, latitude and longitude,
+ * and optional observer height in meters relative to the horizon.
+ */
+export function getTimes(
+  _date: Date,
+  _latitude: number,
+  _longitude: number,
+  _height?: number,
+): number {
+  // TODO: potentially address function signature here.
+  unimplemented();
 }

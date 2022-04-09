@@ -1,5 +1,5 @@
 /** One degree to radians */
-const DEGREES_TO_RADIANS = Math.PI / 180;
+export const DEGREES_TO_RADIANS = Math.PI / 180;
 
 /** Obliquity of the earth */
 const EARTH_OBLIQUITY = 23.4397 * DEGREES_TO_RADIANS;
