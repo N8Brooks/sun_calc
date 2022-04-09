@@ -1,8 +1,7 @@
-import {
-  declination,
-  DEGREES_TO_RADIANS,
-  rightAscension,
-} from "./position_calculations.ts";
+import { declination, rightAscension } from "./position.ts";
+
+/** One degree to radians */
+const DEGREES_TO_RADIANS = Math.PI / 180;
 
 export function solarMeanAnomaly(d: number) {
   return (357.5291 + 0.98560028 * d) * DEGREES_TO_RADIANS;

@@ -1,8 +1,4 @@
-import {
-  eclipticLongitude,
-  solarMeanAnomaly,
-  sunCoordinates,
-} from "./sun_calculations.ts";
+import { eclipticLongitude, solarMeanAnomaly, sunCoordinates } from "./sun.ts";
 import { assertAlmostEquals } from "./test_deps.ts";
 
 Deno.test("solarMeanAnomaly", async (t) => {

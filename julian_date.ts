@@ -5,7 +5,7 @@ const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 const JULIAN_DAYS_1970 = 2_440_588;
 
 /** Julian days of the beginning of year 2000 */
-const JULIAN_DAYS_2000 = 2_451_545;
+export const JULIAN_DAYS_2000 = 2_451_545;
 
 /** Julian days of a date */
 export function toJulian(date: Date): number {

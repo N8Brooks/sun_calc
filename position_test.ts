@@ -5,7 +5,7 @@ import {
   declination,
   rightAscension,
   sideRealTime,
-} from "./position_calculations.ts";
+} from "./position.ts";
 import {
   assertAlmostEquals,
   assertSpyCall,
