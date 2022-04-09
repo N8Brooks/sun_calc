@@ -1,7 +1,9 @@
 import { unimplemented } from "./deps.ts";
 import { fromJulian, toDays } from "./julian_date.ts";
+import { moonCoordinates } from "./moon.ts";
 import {
   altitude,
+  astronomicalRefraction,
   azimuth,
   declination,
   DEGREES_TO_RADIANS,
@@ -124,12 +126,30 @@ export function getTimes(
 
 /** Calculates moon position for a given date */
 export function getMoonPosition(
-  _date: Date,
-  _latitude: number,
-  _longitude: number,
+  date: Date,
+  latitude: number,
+  longitude: number,
 ) {
-  // TODO: potentially address function signature here.
-  unimplemented();
+  const phi = DEGREES_TO_RADIANS * latitude;
+  const lw = DEGREES_TO_RADIANS * -longitude;
+  const d = toDays(date);
+  const { distance, rightAscension, declination } = moonCoordinates(d);
+  const h = sideRealTime(d, lw) - rightAscension;
+  let alt = altitude(h, phi, declination);
+  const pa = Math.atan2(
+    Math.sin(h),
+    Math.tan(phi) * Math.cos(declination) - Math.sin(declination) * Math.cos(h),
+  );
+
+  // altitude correction for refraction
+  alt += astronomicalRefraction(alt);
+
+  return {
+    azimuth: azimuth(h, phi, declination),
+    altitude: alt,
+    distance,
+    parallacticAngle: pa,
+  };
 }
 
 /** Calculates moon illumination for a given date */
