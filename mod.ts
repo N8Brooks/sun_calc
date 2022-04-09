@@ -1,4 +1,3 @@
-import { unimplemented } from "./deps.ts";
 import { fromJulian, hoursLater, toDays } from "./julian_date.ts";
 import { moonCoordinates } from "./moon.ts";
 import {
