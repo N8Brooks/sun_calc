@@ -9,7 +9,7 @@ export function julianCycle(d: number, lw: number) {
 export function approxTransit(Ht: number, lw: number, n: number) {
   return JULIAN_0 + (Ht + lw) / (2 * Math.PI) + n;
 }
-function solarTransitJ(ds: number, M: number, L: number) {
+export function solarTransitJ(ds: number, M: number, L: number) {
   return JULIAN_DAYS_2000 + ds + 0.0053 * Math.sin(M) -
     0.0069 * Math.sin(2 * L);
 }
