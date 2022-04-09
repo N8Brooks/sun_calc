@@ -18,6 +18,9 @@ import {
   solarTransitJ,
 } from "./sun_times.ts";
 
+/** Distance from the sun to the earth in kilometers */
+const SUN_DISTANCE_KM = 149_598_000;
+
 /** Notable times for sun position */
 export interface SolarTimes {
   solarNoon: Date;
@@ -153,8 +156,35 @@ export function getMoonPosition(
 }
 
 /** Calculates moon illumination for a given date */
-export function getMoonIlluminations(_date: Date) {
-  unimplemented();
+export function getMoonIlluminations(date?: Date) {
+  const days = toDays(date || new Date());
+  const sun = sunCoordinates(days);
+  const moon = moonCoordinates(days);
+
+  const phi = Math.acos(
+    Math.sin(sun.declination) * Math.sin(moon.declination) +
+      Math.cos(sun.declination) * Math.cos(moon.declination) *
+        Math.cos(sun.rightAscension - moon.rightAscension),
+  );
+
+  const inc = Math.atan2(
+    SUN_DISTANCE_KM * Math.sin(phi),
+    moon.distance - SUN_DISTANCE_KM * Math.cos(phi),
+  );
+
+  const angle = Math.atan2(
+    Math.cos(sun.declination) *
+      Math.sin(sun.rightAscension - moon.rightAscension),
+    Math.sin(sun.declination) * Math.cos(moon.declination) -
+      Math.cos(sun.declination) * Math.sin(moon.declination) *
+        Math.cos(sun.rightAscension - moon.rightAscension),
+  );
+
+  return {
+    fraction: (1 + Math.cos(inc)) / 2,
+    phase: 0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI,
+    angle: angle,
+  };
 }
 
 /** Moon rise and set times */
