@@ -46,3 +46,28 @@ export function getTimes(
   // TODO: potentially address function signature here.
   unimplemented();
 }
+
+/** Calculates moon position for a given date */
+export function getMoonPosition(
+  _date: Date,
+  _latitude: number,
+  _longitude: number,
+) {
+  // TODO: potentially address function signature here.
+  unimplemented();
+}
+
+/** Calculates moon illumination for a given date */
+export function getMoonIlluminations(_date: Date) {
+  unimplemented();
+}
+
+/** Moon rise and set times */
+export function getMoonTimes(
+  _date: Date,
+  _latitude: number,
+  _longitude: number,
+) {
+  // TODO: potentially address function signature here.
+  unimplemented();
+}
