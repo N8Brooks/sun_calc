@@ -2,7 +2,7 @@
 export const DEGREES_TO_RADIANS = Math.PI / 180;
 
 /** Obliquity of the earth */
-export const EARTH_OBLIQUITY = 23.4397 * DEGREES_TO_RADIANS;
+const EARTH_OBLIQUITY = 23.4397 * DEGREES_TO_RADIANS;
 
 export function rightAscension(l: number, b: number): number {
   return Math.atan2(
